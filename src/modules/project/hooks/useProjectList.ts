@@ -1,10 +1,14 @@
 import { useCallback, useEffect, useMemo, useState } from 'react';
 import { apiFetch } from '../../../api/http';
-import { ListProjectResponse, ProjectListItemDto } from '../types';
+import { ListProjectResponse, ProjectListItemDto, ProjectStatus } from '../types';
 
 export interface UseProjectListParams {
   page?: number;
   size?: number;
+  search?: string;
+  status?: ProjectStatus | 'ALL';
+  technologyIds?: number[];
+  roleIds?: number[];
 }
 
 export interface UseProjectListResult {
@@ -30,6 +34,7 @@ interface ProjectListState {
 
 const DEFAULT_PAGE = 0;
 const DEFAULT_SIZE = 12;
+const EMPTY_FILTER_IDS: number[] = [];
 
 const getErrorMessage = (error: unknown): string => {
   if (error instanceof Error) {
@@ -42,6 +47,10 @@ const getErrorMessage = (error: unknown): string => {
 export const useProjectList = ({
   page = DEFAULT_PAGE,
   size = DEFAULT_SIZE,
+  search = '',
+  status,
+  technologyIds = EMPTY_FILTER_IDS,
+  roleIds = EMPTY_FILTER_IDS,
 }: UseProjectListParams = {}): UseProjectListResult => {
   const [state, setState] = useState<ProjectListState>({
     projects: [],
@@ -59,8 +68,26 @@ export const useProjectList = ({
       size: String(size),
     });
 
+    const normalizedSearch = search.trim();
+
+    if (normalizedSearch) {
+      query.set('search', normalizedSearch);
+    }
+
+    if (status && status !== 'ALL') {
+      query.set('status', status);
+    }
+
+    technologyIds.forEach((id) => {
+      query.append('technologyIds', String(id));
+    });
+
+    roleIds.forEach((id) => {
+      query.append('roleIds', String(id));
+    });
+
     return query.toString();
-  }, [page, size]);
+  }, [page, roleIds, search, size, status, technologyIds]);
 
   const fetchProjectList = useCallback(
     async (signal?: AbortSignal) => {
