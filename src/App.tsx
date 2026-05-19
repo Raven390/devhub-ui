@@ -25,6 +25,7 @@ const App = () => (
                     <Route path="/news" element={<NewsPage />} />
                     <Route path="/users/me" element={<ProfilePage />} />
                     <Route path="/projects/create" element={<ProjectFormPage />} />
+                    <Route path="/projects/:id" element={<ProjectDetailPage />} />
                     <Route path="/project/:id" element={<ProjectDetailPage />} />
 
                     {/* Добавляй сюда любые защищённые маршруты */}

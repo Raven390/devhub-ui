@@ -8,6 +8,8 @@ export interface UserDto {
   id: UUID;
   email: string;
   name: string;
+  headline?: string | null;
+  avatarUrl?: string | null;
 }
 
 export interface RoleDto {
@@ -47,9 +49,12 @@ export interface ProjectListItemDto {
   shortDescription?: string | null;
   status: ProjectStatus;
   type?: TypeDto | null;
+  typeName?: TypeDto | null;
   owner: UserDto;
   technologies?: TechnologyDto[];
+  technologyNames?: TechnologyDto[];
   roles?: RoleDto[];
+  roleNames?: RoleDto[];
   members?: UserDto[];
   createdAt: ISODateTimeString;
 }
