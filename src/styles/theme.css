@@ -7,6 +7,43 @@
 
 
 :root {
+    --bg-base: #000000;
+    --bg-surface: #0d0d0d;
+    --bg-elevated: #111111;
+    --bg-overlay: #1a1a1a;
+    --bg-subtle: #222222;
+    --border-dim: rgba(255,255,255,0.06);
+    --border-default: rgba(255,255,255,0.10);
+    --border-strong: rgba(255,255,255,0.18);
+    --text-primary: #ffffff;
+    --text-secondary: rgba(255,255,255,0.60);
+    --text-muted: rgba(255,255,255,0.35);
+    --text-hint: rgba(255,255,255,0.22);
+    --accent: #3b82f6;
+    --accent-dim: rgba(59,130,246,0.12);
+    --status-draft: rgba(255,255,255,0.25);
+    --status-recruiting: #3b82f6;
+    --status-active: #22c55e;
+    --status-archived: rgba(255,255,255,0.18);
+    --danger: #ef4444;
+    --success: #22c55e;
+    --warning: #f59e0b;
+    --font-base: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+    --font-mono: 'JetBrains Mono', 'Fira Code', monospace;
+    --text-xs: 11px;
+    --text-sm: 12px;
+    --text-base: 13px;
+    --text-md: 15px;
+    --text-lg: 18px;
+    --text-xl: 24px;
+    --text-2xl: 36px;
+    --text-hero: 60px;
+    --weight-normal: 400;
+    --weight-medium: 500;
+    --leading-tight: 1.2;
+    --leading-normal: 1.5;
+    --leading-relaxed: 1.7;
+
     /* --- Основные --- */
     --primary: #3c8dfc; /* чуть ярче для лучшей читаемости */
     --primary-hover: #559dff;

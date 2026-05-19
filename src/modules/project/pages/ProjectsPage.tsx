@@ -25,7 +25,7 @@ export const ProjectsPage = () => {
     <div className="min-h-screen bg-[#08090c] text-zinc-100">
       <ProjectExplorerHeader />
 
-      <main className="mx-auto w-full max-w-[1440px] px-5 py-8 sm:px-8 lg:px-10">
+      <main className="mx-auto w-full max-w-[1440px] px-5 pb-8 pt-12 sm:px-8 sm:pt-16 lg:px-10">
         <section className="flex flex-col gap-5 border-b border-white/[0.07] pb-7 lg:flex-row lg:items-end lg:justify-between">
           <div>
             <p className="text-xs font-medium uppercase tracking-[0.18em] text-zinc-500">
@@ -44,7 +44,7 @@ export const ProjectsPage = () => {
           <button
             type="button"
             onClick={() => navigate('/projects/create')}
-            className="inline-flex w-fit items-center gap-2 rounded-md border border-white/[0.08] bg-zinc-50 px-4 py-2.5 text-sm font-medium text-zinc-950 shadow-sm transition duration-200 hover:bg-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-sky-300/30"
+            className="inline-flex w-fit items-center gap-2 rounded-md border border-white/[0.10] bg-white/[0.04] px-4 py-1.5 text-sm font-medium text-zinc-100 shadow-sm transition duration-200 hover:border-white/[0.18] hover:bg-white/[0.08] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-sky-300/25"
           >
             <Plus className="h-4 w-4" aria-hidden="true" />
             Создать проект

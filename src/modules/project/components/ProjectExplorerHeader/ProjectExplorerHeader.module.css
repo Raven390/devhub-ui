@@ -3,36 +3,38 @@
     top: 0;
     width: 100%;
     z-index: 100;
-    background: #181c27;
+    background: var(--bg-base, #000);
     display: flex;
-    align-items: center;  /* точное выравнивание всего по центру */
+    align-items: center;
     justify-content: space-between;
-    padding: 0 36px;
-    height: 68px; /* чуть выше для баланса и крупных кнопок */
-    border-bottom: 1px solid #24293c;
+    padding: 0 24px;
+    height: 44px;
+    border-bottom: 1px solid var(--border-dim, rgba(255,255,255,0.06));
     box-sizing: border-box;
+    font-family: var(--font-base, Inter, -apple-system, BlinkMacSystemFont, sans-serif);
 }
 
 .left {
     display: flex;
     align-items: center;
-    gap: 36px;
+    gap: 32px;
+    min-width: 0;
 }
 
 .logo {
-    color: #228bf3;
-    font-weight: 700;
-    font-size: 1.34rem;
-    letter-spacing: 1px;
+    color: var(--text-primary, #fff);
+    font-weight: var(--weight-medium, 500);
+    font-size: 15px;
+    letter-spacing: 0;
     text-decoration: none;
-    margin-right: 32px;
     transition: opacity .15s;
     line-height: 1;
     display: flex;
     align-items: center;
     height: 44px;
+    flex: 0 0 auto;
 }
-.logo:hover { opacity: .85; }
+.logo:hover { opacity: .82; }
 
 .nav {
     display: flex;
@@ -42,92 +44,175 @@
 }
 
 .link {
-    color: #c3d0e7;
+    color: var(--text-secondary, rgba(255,255,255,0.60));
     text-decoration: none;
-    font-weight: 500;
-    font-size: 1.08rem;
-    padding: 10px 0 9px 0;
-    border-bottom: 2.5px solid transparent;
-    border-radius: 2px;
+    font-weight: var(--weight-normal, 400);
+    font-size: 13px;
+    padding: 1px 0 0;
+    border-bottom: 1.5px solid transparent;
     transition: color .15s, border-color .14s;
     line-height: 1;
     display: flex;
     align-items: center;
     height: 44px;
 }
-.link:hover { color: #41a3f5; }
+.link:hover { color: var(--text-primary, #fff); }
 .active {
-    color: #228bf3;
-    border-bottom: 2.5px solid #228bf3;
+    color: var(--text-primary, #fff);
+    border-bottom-color: #fff;
 }
 
 .right {
     display: flex;
     align-items: center;
-    gap: 26px;
+    gap: 12px;
     height: 44px;
 }
 
 .createBtn {
-    background: #228bf3;
-    color: #fff;
-    font-weight: 700;
-    border: none;
-    border-radius: 24px;
-    padding: 12px 28px;
-    font-size: 1.07rem;
-    box-shadow: none;
+    background: transparent;
+    color: var(--text-primary, #fff);
+    font-weight: var(--weight-medium, 500);
+    border: 1px solid var(--border-default, rgba(255,255,255,0.10));
+    border-radius: 6px;
+    padding: 8px 16px;
+    font-size: 13px;
     outline: none;
     cursor: pointer;
-    letter-spacing: 0.01em;
-    transition: background .15s, box-shadow .14s, transform .11s;
+    letter-spacing: 0;
+    transition: background .18s, border-color .18s, color .18s, transform .12s;
     display: flex;
     align-items: center;
-    height: 44px;
+    height: 32px;
+    white-space: nowrap;
 }
 .createBtn:hover, .createBtn:focus-visible {
-    background: #41a3f5;
-    box-shadow: 0 2px 14px rgba(34,139,243,0.14);
-    transform: translateY(-1px) scale(1.02);
+    background: #fff;
+    border-color: #fff;
+    color: #000;
+    transform: translateY(-1px);
 }
 .createBtn:active {
-    background: #1c71d8;
+    transform: translateY(0);
 }
 
 .avatarMenu {
     display: flex;
     align-items: center;
-    cursor: pointer;
     height: 44px;
+    position: relative;
 }
 
-.avatar {
-    background: #24293c;
-    color: #41a3f5;
+.avatarButton {
+    color: #fff;
     border-radius: 50%;
-    width: 42px;
-    height: 42px;
+    width: 28px;
+    height: 28px;
     display: flex;
     align-items: center;
     justify-content: center;
-    font-weight: 700;
-    font-size: 1.15rem;
+    font-weight: var(--weight-medium, 500);
+    font-size: 12px;
     user-select: none;
-    transition: background .15s, box-shadow .12s;
-    border: 2.5px solid #1d2230;
-    box-shadow: none;
+    transition: border-color .15s, transform .12s;
+    border: 1px solid var(--border-default, rgba(255,255,255,0.10));
+    cursor: pointer;
+    padding: 0;
 }
-.avatarMenu:hover .avatar,
-.avatarMenu:focus-visible .avatar {
-    background: #20273c;
-    box-shadow: 0 1px 6px rgba(34,139,243,0.08);
+.avatarButton:hover,
+.avatarButton:focus-visible,
+.avatarButton[aria-expanded='true'] {
+    border-color: var(--border-strong, rgba(255,255,255,0.18));
+    outline: none;
+}
+
+.userMenu {
+    position: absolute;
+    top: calc(100% + 8px);
+    right: 0;
+    width: 200px;
+    z-index: 1000;
+    padding: 4px 0;
+    border: 1px solid var(--border-default, rgba(255,255,255,0.10));
+    border-radius: 8px;
+    background: var(--bg-elevated, #111);
+    box-shadow: 0 8px 24px rgba(0,0,0,0.4);
+}
+
+.userSummary {
+    padding: 8px 12px;
+}
+
+.userName {
+    color: var(--text-primary, #fff);
+    font-size: 13px;
+    font-weight: var(--weight-medium, 500);
+    line-height: 1.4;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.userEmail {
+    color: var(--text-muted, rgba(255,255,255,0.35));
+    font-size: 11px;
+    line-height: 1.4;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.menuDivider {
+    height: 1px;
+    margin: 4px 0;
+    background: var(--border-dim, rgba(255,255,255,0.06));
+}
+
+.menuItem {
+    width: 100%;
+    height: 32px;
+    padding: 0 12px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    border: none;
+    background: transparent;
+    color: var(--text-secondary, rgba(255,255,255,0.60));
+    font: inherit;
+    font-size: 13px;
+    font-weight: var(--weight-normal, 400);
+    text-decoration: none;
+    cursor: pointer;
+    transition: background .15s, color .15s;
+}
+
+.menuItem svg {
+    width: 14px;
+    height: 14px;
+    color: var(--text-muted, rgba(255,255,255,0.35));
+    flex: 0 0 auto;
+}
+
+.menuItem:hover,
+.menuItem:focus-visible {
+    background: var(--bg-overlay, #1a1a1a);
+    color: var(--text-primary, #fff);
+    outline: none;
+}
+
+.logoutItem:hover,
+.logoutItem:focus-visible {
+    color: var(--danger, #ef4444);
+}
+
+.logoutItem:hover svg,
+.logoutItem:focus-visible svg {
+    color: var(--danger, #ef4444);
 }
 
 @media (max-width: 600px) {
     .header { padding: 0 12px; }
     .left { gap: 14px; }
     .nav { gap: 12px; }
-    .right { gap: 12px; }
-    .createBtn { padding: 9px 16px; font-size: 0.99rem; }
-    .avatar { width: 36px; height: 36px; }
+    .createBtn { padding: 8px 10px; }
 }

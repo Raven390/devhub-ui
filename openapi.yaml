@@ -21,11 +21,27 @@ tags:
     description: Управление проектами
   - name: reference
     description: Справочники (роли, технологии, типы проектов)
+  - name: users
+    description: Профили пользователей
 
 # ─────────────────────────────────────────────────────────────
 paths:
 
   # ── PROJECTS ─────────────────────────────────────────────
+  /platform/stats:
+    get:
+      tags: [ platform ]
+      summary: Статистика платформы (публичный эндпоинт)
+      operationId: getPlatformStats
+      security: []
+      responses:
+        "200":
+          description: Агрегированная статистика
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PlatformStatsResponse'
+
   /projects:
     get:
       tags: [ projects ]
@@ -34,6 +50,41 @@ paths:
       parameters:
         - $ref: '#/components/parameters/PageParam'
         - $ref: '#/components/parameters/SizeParam'
+        - name: status
+          in: query
+          required: false
+          schema:
+            $ref: '#/components/schemas/ProjectStatus'
+        - name: technologyIds
+          in: query
+          required: false
+          schema:
+            type: array
+            items:
+              type: integer
+          style: form
+          explode: true
+        - name: roleIds
+          in: query
+          required: false
+          schema:
+            type: array
+            items:
+              type: integer
+          style: form
+          explode: true
+        - name: search
+          in: query
+          required: false
+          schema:
+            type: string
+            maxLength: 100
+        - name: ownerId
+          in: query
+          required: false
+          schema:
+            type: string
+            format: uuid
       responses:
         "200":
           description: Страница проектов
@@ -248,6 +299,135 @@ paths:
         "401":
           $ref: '#/components/responses/Unauthorized'
 
+  # ── USERS ────────────────────────────────────────────────
+  /users/me:
+    get:
+      tags: [ users ]
+      summary: Профиль текущего пользователя
+      operationId: getCurrentUserProfile
+      security:
+        - bearerAuth: []
+      responses:
+        "200":
+          description: Профиль пользователя
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UserProfileResponse'
+        "401":
+          $ref: '#/components/responses/Unauthorized'
+
+    put:
+      tags: [ users ]
+      summary: Обновить профиль текущего пользователя
+      operationId: updateCurrentUserProfile
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UpdateUserProfileRequest'
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UserProfileResponse'
+        "400":
+          $ref: '#/components/responses/BadRequest'
+        "401":
+          $ref: '#/components/responses/Unauthorized'
+        "422":
+          $ref: '#/components/responses/UnprocessableEntity'
+
+  /users/{userId}:
+    parameters:
+      - name: userId
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+    get:
+      tags: [ users ]
+      summary: Публичный профиль пользователя
+      operationId: getUserById
+      security: []
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UserProfileResponse'
+        "404":
+          $ref: '#/components/responses/NotFound'
+
+  /users/me:
+    get:
+      tags: [ users ]
+      summary: Профиль текущего пользователя
+      operationId: getCurrentUser
+      security:
+        - bearerAuth: []
+      responses:
+        "200":
+          description: Профиль текущего пользователя
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UserProfileResponse'
+        "401":
+          $ref: '#/components/responses/Unauthorized'
+
+    put:
+      tags: [ users ]
+      summary: Обновить профиль текущего пользователя
+      operationId: updateCurrentUser
+      security:
+        - bearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UpdateUserProfileRequest'
+      responses:
+        "200":
+          description: Обновлённый профиль
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UserProfileResponse'
+        "400":
+          $ref: '#/components/responses/BadRequest'
+        "401":
+          $ref: '#/components/responses/Unauthorized'
+        "422":
+          $ref: '#/components/responses/UnprocessableEntity'
+
+  /users/{userId}:
+    parameters:
+      - name: userId
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+        description: UUID пользователя
+    get:
+      tags: [ users ]
+      summary: Публичный профиль пользователя
+      operationId: getUserById
+      responses:
+        "200":
+          description: Публичный профиль пользователя
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UserProfileResponse'
+        "404":
+          $ref: '#/components/responses/NotFound'
+
 # ─────────────────────────────────────────────────────────────
 components:
 
@@ -384,6 +564,78 @@ components:
         name:
           type: string
           example: Иван Иванов
+        headline:
+          type: string
+          nullable: true
+          maxLength: 200
+          example: Java Backend Developer
+        avatarUrl:
+          type: string
+          nullable: true
+          example: https://www.gravatar.com/avatar/abc123?d=identicon&s=200
+
+    UserProfileResponse:
+      type: object
+      required: [ id, name, email, createdAt ]
+      properties:
+        id:
+          type: string
+          format: uuid
+        name:
+          type: string
+          example: Иван Иванов
+        email:
+          type: string
+          format: email
+          example: user@example.com
+        headline:
+          type: string
+          nullable: true
+          maxLength: 200
+        bio:
+          type: string
+          nullable: true
+          maxLength: 1000
+        avatarUrl:
+          type: string
+          nullable: true
+        githubUrl:
+          type: string
+          nullable: true
+          example: https://github.com/username
+        skills:
+          type: array
+          items:
+            $ref: '#/components/schemas/TechnologyDto'
+          default: []
+        createdAt:
+          type: string
+          format: date-time
+
+    UpdateUserProfileRequest:
+      type: object
+      properties:
+        name:
+          type: string
+          minLength: 1
+          maxLength: 100
+        headline:
+          type: string
+          maxLength: 200
+          nullable: true
+        bio:
+          type: string
+          maxLength: 1000
+          nullable: true
+        githubUrl:
+          type: string
+          format: uri
+          nullable: true
+        skillIds:
+          type: array
+          items:
+            type: integer
+          default: []
 
     RoleDto:
       type: object
