@@ -1,6 +1,6 @@
 import React from 'react';
 import styles from './ProjectCard.module.css';
-import { Project } from "../../types/domain";
+import { ProjectSummary } from "../../types/domain";
 import { useNavigate } from "react-router-dom";
 
 const statusLabels: Record<string, string> = {
@@ -18,7 +18,7 @@ const statusColors: Record<string, string> = {
 };
 
 interface ProjectCardProps {
-    project: Project;
+    project: ProjectSummary;
     onClick?: () => void;
 }
 

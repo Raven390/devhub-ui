@@ -52,14 +52,14 @@ export const EditableDropdown: React.FC<EditableDropdownProps> = ({
     }, [editing]);
 
     // Обработка выбора
-    const handleSelect = async (v: string) => {
+    const handleSelect = async (v: string | number) => {
         if (v === value) {
             setEditing(false);
             return;
         }
         setSaving(true);
         try {
-            await onSave(v);
+            await onSave(String(v));
             setSaved(true);
             setTimeout(() => setSaved(false), 1200);
         } finally {
@@ -83,7 +83,7 @@ export const EditableDropdown: React.FC<EditableDropdownProps> = ({
                         if (canEdit && (e.key === "Enter" || e.key === " ")) setEditing(true);
                     }}
                 >
-                    <span className={`${styles.badge} ${styles[value.toLowerCase()]}`}>
+                    <span className={`${styles.badge} ${styles[String(value).toLowerCase()]}`}>
                         {options.find(opt => opt.value === value)?.label || value}
                     </span>
                     {canEdit && <FieldEditIcon className={styles.editIcon} />}
@@ -105,7 +105,7 @@ export const EditableDropdown: React.FC<EditableDropdownProps> = ({
                                     if (e.key === "Escape") setEditing(false);
                                 }}
                             >
-                                <span className={`${styles.badge} ${styles[opt.value.toLowerCase()]}`}>
+                                <span className={`${styles.badge} ${styles[String(opt.value).toLowerCase()]}`}>
                                     {opt.label}
                                 </span>
                                 {opt.value === value && <span className={styles.tick}>✔</span>}

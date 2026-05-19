@@ -48,7 +48,7 @@ const toStatus = (s: string): Status => {
     return 'DRAFT';
 };
 
-const dedupeById = <T extends { id: any }>(arr: T[] = []): T[] =>
+const dedupeById = <T extends { id: string | number }>(arr: T[] = []): T[] =>
     Array.from(new Map(arr.map(i => [i.id, i])).values());
 
 const mapMember = (m: MemberDto): Member => ({
@@ -70,7 +70,7 @@ export const mapGetProjectResponse = (dto: GetProjectResponse): Project => ({
     roles: dedupeById(dto.roleNames?.map(mapRole) ?? []),
     members: (dto.members ?? []).map(mapMember),  // <-- теперь user есть
     createdAt: dto.createdAt,
-    updatedAt: (dto as any).updatedAt,
+    updatedAt: dto.updatedAt,
 });
 
 

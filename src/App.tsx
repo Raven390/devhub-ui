@@ -6,11 +6,10 @@ import keycloak from './auth/keycloak';
 import Landing from './components/landing/LandingPage';
 import Login from './pages/Login';
 import Register from './pages/Register';
-import Projects from "./pages/Projects";
 import PrivateRoute from "./components/PrivateRoute";
-import ProjectExplorer from "./pages/ProjectExplorer/ProjectExplorer";
 import ProjectFormPage from "./pages/ProjectForm/ProjectFormPage";
 import {ProjectDetailPage} from "./pages/ProjectDetails/ProjectDetailPage";
+import ProjectsPage from "./modules/project/pages/ProjectsPage";
 
 const App = () => (
         <BrowserRouter>
@@ -22,7 +21,7 @@ const App = () => (
 
                 {/* Приватные роуты */}
                 <Route element={<PrivateRoute />}>
-                    <Route path="/projects" element={<ProjectExplorer />} />
+                    <Route path="/projects" element={<ProjectsPage />} />
                     <Route path="/projects/create" element={<ProjectFormPage />} />
                     <Route path="/project/:id" element={<ProjectDetailPage />} />
 

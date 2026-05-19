@@ -49,6 +49,7 @@ export interface GetProjectResponse {
     roleNames: RoleDto[];             // бек так назвал — оставляем как есть
     members: MemberDto[];
     createdAt: string; // ISO (OffsetDateTime)
+    updatedAt?: string;
 }
 
 export interface CreateProjectResponse {
