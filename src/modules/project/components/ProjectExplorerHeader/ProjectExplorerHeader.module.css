@@ -214,5 +214,5 @@
     .header { padding: 0 12px; }
     .left { gap: 14px; }
     .nav { gap: 12px; }
-    .createBtn { padding: 8px 10px; }
+    .createBtn { display: none; }
 }
