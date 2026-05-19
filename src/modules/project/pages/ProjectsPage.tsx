@@ -1,7 +1,7 @@
 import { AlertCircle, ChevronLeft, ChevronRight, Plus } from 'lucide-react';
 import { useMemo, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { ProjectExplorerHeader } from '../../../components/ProjectExplorerHeader/ProjectExplorerHeader';
+import { ProjectExplorerHeader } from '../components/ProjectExplorerHeader/ProjectExplorerHeader';
 import { ProjectCard } from '../components/ProjectCard';
 import { ProjectCardSkeleton } from '../components/ProjectCardSkeleton';
 import { useProjectList } from '../hooks/useProjectList';

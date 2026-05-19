@@ -3,12 +3,12 @@ import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
 import { ReactKeycloakProvider } from '@react-keycloak/web';
 import keycloak from './auth/keycloak';
 
-import Landing from './components/landing/LandingPage';
-import Login from './pages/Login';
-import Register from './pages/Register';
+import Landing from './modules/landing/pages/LandingPage';
+import Login from './modules/user/pages/Login';
+import Register from './modules/user/pages/Register';
 import PrivateRoute from "./components/PrivateRoute";
-import ProjectFormPage from "./pages/ProjectForm/ProjectFormPage";
-import {ProjectDetailPage} from "./pages/ProjectDetails/ProjectDetailPage";
+import ProjectFormPage from "./modules/project/pages/ProjectFormPage";
+import {ProjectDetailPage} from "./modules/project/pages/ProjectDetailPage";
 import ProjectsPage from "./modules/project/pages/ProjectsPage";
 
 const App = () => (

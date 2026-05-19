@@ -8,7 +8,7 @@ import {
     TechnologyDto,
     TypeDto,
     UserDto,
-    MemberDto, SearchUsersResponse,
+    MemberDto, MemberResponseDto, SearchUsersResponse,
 } from '../types/dto';
 import {
     Project,
@@ -51,7 +51,7 @@ const toStatus = (s: string): Status => {
 const dedupeById = <T extends { id: string | number }>(arr: T[] = []): T[] =>
     Array.from(new Map(arr.map(i => [i.id, i])).values());
 
-const mapMember = (m: MemberDto): Member => ({
+export const mapMember = (m: MemberDto | MemberResponseDto): Member => ({
     id: m.id,
     user: mapUser(m.user),               // <-- главное изменение
     status: (m.status),    // <-- не забываем статус

@@ -1,0 +1,164 @@
+.overlay {
+    position: fixed;
+    inset: 0;
+    z-index: 100;
+    display: grid;
+    place-items: center;
+    padding: 20px;
+    background: rgba(5, 8, 14, 0.58);
+    backdrop-filter: blur(8px);
+}
+
+.modal {
+    width: min(460px, 100%);
+    border: 1px solid rgba(255, 255, 255, 0.09);
+    border-radius: 18px;
+    background: #151a25;
+    box-shadow: 0 24px 70px rgba(0, 0, 0, 0.36);
+    color: var(--text-main, #f7f8fb);
+}
+
+.header {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 16px;
+    padding: 20px 20px 14px;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+}
+
+.title {
+    margin: 0;
+    font-size: 18px;
+    line-height: 1.25;
+    font-weight: 700;
+}
+
+.subtitle {
+    margin: 6px 0 0;
+    color: var(--text-light, #aeb7c7);
+    font-size: 14px;
+    line-height: 1.45;
+}
+
+.closeButton {
+    width: 34px;
+    height: 34px;
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    border-radius: 10px;
+    background: rgba(255, 255, 255, 0.03);
+    color: #d7dce7;
+    cursor: pointer;
+    transition: background 0.16s ease, border-color 0.16s ease, transform 0.12s ease;
+}
+
+.closeButton:hover,
+.closeButton:focus-visible {
+    background: rgba(255, 255, 255, 0.07);
+    border-color: rgba(255, 255, 255, 0.16);
+}
+
+.closeButton:active {
+    transform: translateY(1px);
+}
+
+.body {
+    padding: 16px 20px 6px;
+}
+
+.roleList {
+    display: grid;
+    gap: 8px;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+}
+
+.roleItem {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    min-height: 44px;
+    padding: 10px 12px;
+    border: 1px solid rgba(255, 255, 255, 0.07);
+    border-radius: 12px;
+    background: rgba(255, 255, 255, 0.025);
+    color: #eef1f7;
+    cursor: pointer;
+    transition: background 0.16s ease, border-color 0.16s ease;
+}
+
+.roleItem:hover {
+    background: rgba(255, 255, 255, 0.05);
+    border-color: rgba(255, 255, 255, 0.14);
+}
+
+.checkbox {
+    width: 16px;
+    height: 16px;
+    accent-color: #228bf3;
+}
+
+.roleName {
+    font-size: 14px;
+    font-weight: 600;
+}
+
+.empty {
+    margin: 0;
+    color: var(--text-light, #aeb7c7);
+    font-size: 14px;
+}
+
+.error {
+    margin-top: 12px;
+    color: #ff9aa8;
+    font-size: 14px;
+}
+
+.footer {
+    display: flex;
+    justify-content: flex-end;
+    gap: 10px;
+    padding: 16px 20px 20px;
+}
+
+.secondaryButton,
+.primaryButton {
+    height: 40px;
+    padding: 0 16px;
+    border-radius: 10px;
+    font-size: 14px;
+    font-weight: 700;
+    cursor: pointer;
+    transition: background 0.16s ease, border-color 0.16s ease, color 0.16s ease;
+}
+
+.secondaryButton {
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    background: rgba(255, 255, 255, 0.03);
+    color: #d8deea;
+}
+
+.secondaryButton:hover,
+.secondaryButton:focus-visible {
+    background: rgba(255, 255, 255, 0.07);
+}
+
+.primaryButton {
+    border: 1px solid #228bf3;
+    background: #228bf3;
+    color: #fff;
+}
+
+.primaryButton:hover,
+.primaryButton:focus-visible {
+    background: #3d9cf5;
+    border-color: #3d9cf5;
+}
+
+.primaryButton:disabled,
+.secondaryButton:disabled {
+    opacity: 0.58;
+    cursor: not-allowed;
+}

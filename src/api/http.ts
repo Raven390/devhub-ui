@@ -40,5 +40,9 @@ export async function apiFetch<T>(
         throw new Error(errText || 'Ошибка запроса');
     }
 
+    if (res.status === 204) {
+        return undefined as T;
+    }
+
     return res.json();
 }

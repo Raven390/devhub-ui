@@ -36,6 +36,24 @@ export interface MemberDto {
     leftAt?: string;
 }
 
+export interface JoinProjectRequest {
+    roleIds: number[];
+}
+
+export interface UpdateMemberStatusRequest {
+    status: MemberStatus;
+}
+
+export interface MemberResponseDto {
+    id: UUID;
+    projectId?: UUID;
+    user: UserDto;
+    roles?: RoleDto[];
+    status: MemberStatus;
+    joinedAt: string;
+    leftAt?: string | null;
+}
+
 
 export interface GetProjectResponse {
     id: UUID;
