@@ -2,12 +2,12 @@ import React, { useState } from "react";
 import styles from "./ProjectDetailView.module.css";
 import { updateProject } from "../../api/ProjectsApi";
 
-// ✅ updated: импортируем доменные типы (а не старые плоские)
-import { Project, ProjectType, Technology, Role } from "../../types/domain";
+import {Project, ProjectType, Technology, Role, Member} from "../../types/domain";
 
 import { EditableField } from "../../components/ui/EditableField";
 import { EditableDropdown } from "../../components/ui/EditableDropdown";
 import { EditableMultiSelect } from "../../components/ui/EditableMultiSelect";
+import ProjectMembersBlock from "../../components/ui/ProjectMembersBlock";
 
 interface ProjectDetailViewProps {
     project: Project;
@@ -156,6 +156,65 @@ export const ProjectDetailView: React.FC<ProjectDetailViewProps> = ({
     const techNames = (localProject.technologies ?? []).map(t => t.name);
     const roleNames = (localProject.roles ?? []).map(r => r.name);
 
+    // --- Участники ---
+    const [membersLoading, setMembersLoading] = useState(false);
+
+    const handleMembersSave = async (newMembers: Member[]) => {
+        setMembersLoading(true);
+        try {
+            // 1) Фильтруем и нормализуем вход
+            const cleaned: Member[] = newMembers
+                .filter(Boolean)
+                .map(m => ({
+                    ...m,
+                    // Гарантируем наличие user-объекта. Если где-то просочился { userId }, подхватим.
+                    user: m.user ?? (('userId' in (m as any)) ? { id: (m as any).userId } : undefined),
+                    // Чистим и дедупим роли, отсекаем undefined
+                    roles: Array.from(
+                        new Map(
+                            ((m.roles ?? []).filter((r): r is Role => !!r) as Role[]).map(r => [r.id, r])
+                        ).values()
+                    ),
+                }))
+                // Если нет user.id — такой элемент отбрасываем и логируем
+                .filter(m => {
+                    const ok = !!m.user?.id;
+                    if (!ok) {
+                        console.warn('[members] пропущен элемент без user.id:', m);
+                    }
+                    return ok;
+                });
+
+            // 2) DTO под бэк
+            const membersDto = cleaned.map(m => ({
+                // для новых "временных" — не шлём id, чтобы бэк создал запись
+                id: (m.id && !String(m.id).startsWith('temp-')) ? m.id : undefined,
+                user: { id: m.user!.id },
+                roles: (m.roles ?? []).map(r => ({ id: r.id, name: r.name })),
+                status: m.status,
+            }));
+
+            console.table(cleaned.map(m => ({
+                mid: m.id,
+                userId: m.user?.id,
+                roles: (m.roles ?? []).map(r => r.id).join(','),
+                status: m.status
+            })));
+
+
+            await updateProject(localProject.id, { members: membersDto });
+
+            // 3) Оптимистичное локальное состояние — уже очищенное
+            setLocalProject(prev => ({
+                ...prev,
+                members: cleaned,
+            }));
+        } finally {
+            setMembersLoading(false);
+        }
+    };
+
+
     return (
         <div className={styles.container}>
             {/* Заголовок + статус */}
@@ -278,6 +337,15 @@ export const ProjectDetailView: React.FC<ProjectDetailViewProps> = ({
                     </div>
                     <span className={styles.ownerName}>{localProject.owner?.name ?? "Unknown"}</span>
                 </div>
+            </div>
+            <div className={styles.section}>
+                <ProjectMembersBlock
+                    members={localProject.members ?? []}
+                    rolesCatalog={rolesList}
+                    canEdit={canEdit}
+                    onMembersChange={handleMembersSave}
+                />
+                {membersLoading && <div style={{marginTop: 8, opacity: .7}}>Сохраняем участников…</div>}
             </div>
 
             {/* Дата */}

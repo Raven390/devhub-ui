@@ -36,7 +36,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     useEffect(() => {
         const accessToken = localStorage.getItem('access_token');
         const refreshToken = localStorage.getItem('refresh_token');
-        console.log('[AuthProvider] access:', accessToken, 'refresh:', refreshToken);
+
         if (accessToken && refreshToken) {
             const claims = parseJwtClaims(accessToken);
             const { username, email, business_id } = claims;
@@ -48,6 +48,8 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
                 accessToken,
                 refreshToken,
             });
+
+            console.log('[AuthProvider] businessId:', business_id);
         }
         setLoading(false); // <- по-любому
     }, []);

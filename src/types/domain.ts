@@ -2,10 +2,12 @@
 
 export type UUID = string;
 export type Status = 'DRAFT' | 'ACTIVE' | 'RECRUITING' | 'ARCHIVED';
+export type MemberStatus = 'OWNER' | 'ACTIVE' | 'INVITED' | 'LEFT' | 'REMOVED';
 
 export interface User {
     id: UUID;
-    name: string;
+    email?: string;
+    name?: string;
     avatarUrl?: string;
 }
 
@@ -25,9 +27,9 @@ export interface ProjectType {
 }
 
 export interface Member {
-    id: UUID;
-    name: string;
-    avatarUrl?: string;
+    id?: UUID;
+    user: User;
+    status: MemberStatus
     roles?: Role[];
 }
 
@@ -75,6 +77,7 @@ export interface CreateProjectPayload {
     typeId: UUID;
     technologyIds?: number[];
     roleIds?: number[];
+    members?: Member[]
 }
 
 export interface UpdateProjectPayload {
@@ -85,4 +88,5 @@ export interface UpdateProjectPayload {
     typeId?: UUID;
     technologyIds?: number[];
     roleIds?: number[];
+    members?: Member[]
 }

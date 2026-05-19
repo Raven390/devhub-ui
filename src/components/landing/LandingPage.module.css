@@ -1,9 +1,82 @@
-.main {
-    flex: 1 0 auto;
-    display: flex;
-    flex-direction: column;
-    background: none;
+:root{
+    --bg:#0b0d10;
+    --orange: rgb(245,81,2);
 }
+
+/* базовый фон + лёгкая виньетка */
+.main{
+    position: relative;
+    min-height: 100dvh;
+    overflow: hidden;
+    display:flex;
+    flex-direction:column;
+    background:
+            radial-gradient(120% 120% at 50% 50%, rgba(0,0,0,0) 46%, rgba(0,0,0,.32) 92%),
+            var(--bg);
+    isolation:isolate; /* отдельный стек контента */
+}
+
+/* контент всегда поверх эффектов */
+.main > * { position: relative; z-index: 2; }
+
+/* узкий вертикальный конус, строго по центру (без mask-image) */
+.main::before{
+    content:"";
+    position:absolute;
+    /* делаем слой узкой колонной, чтобы не делить экран пополам */
+    width: min(40vw, 700px);
+    height: 150vh;
+    left: 50%;
+    top: -14vh;
+    transform: translateX(-50%); /* центр по X */
+    z-index: 0;
+    pointer-events: none;
+
+    /* сам конус + внутренняя дымка */
+    background:
+            conic-gradient(
+                    from 180deg at 50% 0%,
+                    rgba(245,81,2,.70) 0deg 30deg,
+                    rgba(245,81,2,.46) 30deg 68deg,
+                    rgba(245,81,2,.20) 68deg 102deg,
+                    rgba(245,81,2,.08) 102deg 132deg,
+                    transparent 132deg 360deg
+            ),
+            radial-gradient(36% 66% at 50% 46%, rgba(255,140,90,.10), transparent 70%),
+
+                /* мягкое перо краёв без mask: затемняем края САМОГО слоя */
+            radial-gradient(65% 90% at 50% 40%, transparent 55%, rgba(0,0,0,.4) 85%, rgba(0,0,0,.55) 100%);
+    filter: blur(88px) saturate(106%) contrast(101%);
+    opacity:.86;
+}
+
+/* тени вокруг конуса, только затемнение (контент не трогаем) */
+.main::after{
+    content:"";
+    position:absolute;
+    inset:-10%;
+    z-index: 1;
+    pointer-events:none;
+    background:
+            radial-gradient(72% 44% at 50% -8%, rgba(0,0,0,.70), transparent 78%),   /* верх */
+            radial-gradient(74% 48% at 50% 108%, rgba(0,0,0,.64), transparent 80%),  /* низ */
+            radial-gradient(48% 100% at -12% 50%, rgba(0,0,0,.58), transparent 78%), /* лево */
+            radial-gradient(48% 100% at 112% 50%, rgba(0,0,0,.58), transparent 78%); /* право */
+    filter: blur(34px);
+    opacity:.84;
+}
+
+/* адаптив: меньше ширина конуса, ниже насыщенность */
+@media (max-width: 1100px){
+    .main::before{ width: 62vw; filter: blur(66px) saturate(104%); opacity:.85; }
+}
+@media (max-width: 640px){
+    .main::before{ width: 78vw; height: 120vh; filter: blur(54px); opacity:.80; }
+    .main::after { filter: blur(28px); opacity:.82; }
+}
+
+
+
 
 .section {
     width: 100%;

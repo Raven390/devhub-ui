@@ -8,12 +8,14 @@ import SecondaryButton from '../../components/ui/SecondaryButton';
 import {useNavigate} from "react-router-dom";
 import {createProject} from "../../api/ProjectsApi";
 import {fetchProjectTypes, fetchRoles, fetchTechnologies} from "../../api/ReferenceApi";
+import {useAuth} from "../../auth/AuthContext";
 
 const NAME_MAX = 128;
 const DESC_MAX = 3000;
 const SHORT_DESCRIPTION_MAX = 300;
 
 const ProjectForm: React.FC = () => {
+    const { user } = useAuth();
     // Состояния полей
     const [name, setName] = useState('');
     const [shortDescription, setShortDescription] = useState('');
@@ -32,6 +34,8 @@ const ProjectForm: React.FC = () => {
     const [technologiesList, setTechnologiesList] = useState<{ id: number, name: string }[]>([]);
     const [rolesList, setRolesList] = useState<{ id: number, name: string }[]>([]);
     const [projectTypes, setProjectTypes] = useState<{ id: string, name: string }[]>([]);
+    const [myRoleIds, setMyRoleIds] = useState<number[]>([]);       // роли текущего юзера (обязательны)
+
 
     useEffect(() => {
         fetchTechnologies().then(setTechnologiesList);
@@ -68,6 +72,12 @@ const ProjectForm: React.FC = () => {
         return Object.keys(errs).length === 0;
     }
 
+    // Подсказка: держим myRoleIds в пределах выбранных project roleIds (опционально)
+    useEffect(() => {
+        // если убрали роль из общего списка — убираем её и из моих ролей
+        const filtered = myRoleIds.filter(rid => roleIds.includes(rid));
+        if (filtered.length !== myRoleIds.length) setMyRoleIds(filtered);
+    }, [roleIds]); // eslint-disable-line react-hooks/exhaustive-deps
 
     // Сабмит с интеграцией с API
     async function handleSubmit(e: React.FormEvent) {
@@ -76,6 +86,9 @@ const ProjectForm: React.FC = () => {
         setSubmitError(null);
         setLoading(true);
         try {
+            const userId = user?.businessId || user?.username;
+            if (!userId) throw new Error('Не удалось определить userId для участника');
+
             await createProject({
                 name,
                 shortDescription,
@@ -83,7 +96,17 @@ const ProjectForm: React.FC = () => {
                 typeId,
                 status: "RECRUITING",
                 technologyIds,
-                roleIds
+                roleIds,
+                members: [
+                    {
+                        user: { id: userId },
+                        roles: myRoleIds.map(id => {
+                            const role = rolesList.find(r => r.id === id);
+                            return role ? { id: role.id, name: role.name } : { id, name: '' };
+                        }),
+                        status: "OWNER"
+                    },
+                ],
             });
 
             // После успеха редирект на список проектов
@@ -169,6 +192,18 @@ const ProjectForm: React.FC = () => {
                 onChange={ids => setRoleIds(ids as number[])}
                 placeholder="Выберите роли"
                 error={errors.roles}
+            />
+
+            {/* 🧑 Мои роли как участника (обязательно) */}
+            <MultiSelect
+                label="Мои роли в проекте"
+                options={rolesList
+                    .filter(r => roleIds.includes(r.id)) // можно ограничить только выбранными в проекте
+                    .map(r => ({ value: r.id, label: r.name }))}
+                selected={myRoleIds}
+                onChange={ids => setMyRoleIds(ids as number[])}
+                placeholder="Выберите вашу роль"
+                error={errors.myRoles || errors.members}
             />
 
             {(submitError) && <div className={styles.submitError}>{submitError}</div>}

@@ -1,9 +1,12 @@
 // src/types/dto.ts
 
+import {MemberStatus} from "./domain";
+
 export type UUID = string;
 
 export interface UserDto {
     id: UUID;
+    email: string;
     name: string;
     avatarUrl?: string;
 }
@@ -23,12 +26,16 @@ export interface TypeDto {
     name: string;
 }
 
+// что реально приходит с бэка
 export interface MemberDto {
-    id: UUID;                 // предполагаю, что Member тоже имеет id
-    name: string;
-    avatarUrl?: string;
-    roles?: RoleDto[];        // в списке мог быть UserDto, но для Get — роли есть
+    id?: string;
+    user: UserDto;                  // <-- есть user
+    status: MemberStatus;        // <-- статус на уровне участника
+    roles?: RoleDto[];
+    joinedAt?: string;
+    leftAt?: string;
 }
+
 
 export interface GetProjectResponse {
     id: UUID;
@@ -77,4 +84,10 @@ export interface ListProjectResponseDto {
     total: number;
     page: number;
     size: number;
+}
+
+
+export interface SearchUsersResponse {
+    items: UserDto[];
+    count: number;
 }

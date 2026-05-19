@@ -41,6 +41,7 @@ export const ProjectDetailPage: React.FC = () => {
             .then(([proj, techs, roles, types]) => {
                 if (!mounted) return;
                 setProject(proj);
+                console.log(project);
                 setTechnologiesList(techs);
                 setRolesList(roles);
                 setProjectTypes(types);

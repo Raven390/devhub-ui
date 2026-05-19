@@ -8,7 +8,7 @@ import {
     TechnologyDto,
     TypeDto,
     UserDto,
-    MemberDto,
+    MemberDto, SearchUsersResponse,
 } from '../types/dto';
 import {
     Project,
@@ -22,11 +22,17 @@ import {
     Status,
 } from '../types/domain';
 
-const mapUser = (u: UserDto): User => ({
+export const mapUser = (u: UserDto): User => ({
     id: u.id,
+    email: u.email,
     name: u.name,
     avatarUrl: u.avatarUrl,
 });
+
+export const mapUsersSearch = (resp: SearchUsersResponse | null | undefined): User[] => {
+    if (!resp || !Array.isArray(resp.items)) return [];
+    return resp.items.map(mapUser);
+};
 
 const mapType = (t: TypeDto): ProjectType => ({
     id: t.id,
@@ -42,11 +48,14 @@ const toStatus = (s: string): Status => {
     return 'DRAFT';
 };
 
+const dedupeById = <T extends { id: any }>(arr: T[] = []): T[] =>
+    Array.from(new Map(arr.map(i => [i.id, i])).values());
+
 const mapMember = (m: MemberDto): Member => ({
     id: m.id,
-    name: m.name,
-    avatarUrl: m.avatarUrl,
-    roles: m.roles?.map(mapRole),
+    user: mapUser(m.user),               // <-- главное изменение
+    status: (m.status),    // <-- не забываем статус
+    roles: dedupeById(m.roles?.map(mapRole) ?? []),
 });
 
 export const mapGetProjectResponse = (dto: GetProjectResponse): Project => ({
@@ -57,11 +66,13 @@ export const mapGetProjectResponse = (dto: GetProjectResponse): Project => ({
     owner: mapUser(dto.owner),
     type: mapType(dto.type),
     status: toStatus(dto.status),
-    technologies: dto.technologyNames?.map(mapTech) ?? [],
-    roles: dto.roleNames?.map(mapRole) ?? [],
-    members: dto.members?.map(mapMember) ?? [],
+    technologies: dedupeById(dto.technologyNames?.map(mapTech) ?? []),
+    roles: dedupeById(dto.roleNames?.map(mapRole) ?? []),
+    members: (dto.members ?? []).map(mapMember),  // <-- теперь user есть
     createdAt: dto.createdAt,
+    updatedAt: (dto as any).updatedAt,
 });
+
 
 export const mapCreateProjectResponse = (dto: CreateProjectResponse): Project => ({
     id: dto.id,
